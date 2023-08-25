@@ -1,0 +1,23 @@
+---
+version: '3'
+services:
+  lightdp-agent-service:
+    image: lightdp-agent:0.1.0
+    container_name: lightdp-agent-service
+    build:
+      context: .
+      dockerfile: images/Agent.Dockerfile
+      args:
+        - AGENT_IMAGE=lightdp-agent
+        - AGENT_VERSION=0.1.0
+        - AGENT_WORKDIR=/opt/lightdp-agent
+        - AGENT_CONTAINER_NAME=lightdp-agent-service
+        - AGENT_LOG_LEVEL=DEBUG
+    privileged: true
+    restart: always
+    volumes:
+      - dind-storage:/var/lib/docker
+    ports:
+      - '2375:2375'
+volumes:
+  dind-storage: null
