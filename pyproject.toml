@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "lightdp"
+version = "0.1.0"
+description = "Light DevOps Framework."
+authors = ["Allen Chou <f1470891079@gmail.com>"]
+license = "Apache License v2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.7.0,<4.0.0"
+rich = "*"
+pytz = "*"
+docker = "6.1.*"
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+flake8 = "*"
+flake9 = "*"
+pytest = "*"
+pytest-asyncio = "*"
+yapf = "*"
+isort = "*"
+
+[tool.isort]
+profile = "black"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
