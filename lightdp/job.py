@@ -1,6 +1,6 @@
 from abc import ABC
 from enum import Enum
-from typing import Text, Union
+from typing import Optional, Text, Union
 
 
 class JobType(str, Enum):
@@ -21,5 +21,24 @@ class JobType(str, Enum):
 
 
 class Job(ABC):
-    def __init__(self, job_type: "JobType", **kwargs):
+    def __init__(
+        self, job_type: "JobType", cpu: Text = "500m", memory: Text = "512Mi", **kwargs
+    ):
         self.job_type = JobType.from_string(job_type)
+        self.cpu = cpu
+        self.memory = memory
+
+
+class DockerRunJob(Job):
+    def __init__(
+        self,
+        image_name: Text,
+        port: Optional[Text] = None,
+        cpu: Text = "500m",
+        memory: Text = "512Mi",
+        **kwargs,
+    ):
+        super().__init__(JobType.DOCKER_RUN, cpu=cpu, memory=memory, **kwargs)
+
+        self.image_name = image_name
+        self.port = port
