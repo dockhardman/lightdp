@@ -5,12 +5,18 @@ description = "Light DevOps Framework."
 authors = ["Allen Chou <f1470891079@gmail.com>"]
 license = "Apache License v2.0"
 readme = "README.md"
+homepage = "https://github.com/dockhardman/lightdp"
+repository = "https://github.com/dockhardman/lightdp"
+
+[tool.poetry.scripts]
+lightdp = "lightdp.cli.main:app"
 
 [tool.poetry.dependencies]
 python = ">=3.7.0,<4.0.0"
 rich = "*"
 pytz = "*"
 docker = "6.1.*"
+click = "^8"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
