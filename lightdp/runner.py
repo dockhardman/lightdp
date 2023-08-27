@@ -3,6 +3,8 @@ from typing import TYPE_CHECKING, Text
 
 import docker
 
+from lightdp.job import DockerRunJob
+
 if TYPE_CHECKING:
     from docker.models.containers import Container
 
@@ -12,6 +14,9 @@ class Runner(ABC):
         pass
 
     def run(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def run_job(self, job: "DockerRunJob", *args, **kwargs):
         raise NotImplementedError
 
     def logs(self, *args, **kwargs):
@@ -27,6 +32,12 @@ class DockerRunner(Runner):
     def run(self, image_name: Text, *args, **kwargs):
         container_id = self.run_docker_image(image_name)
         self.logs(container_id)
+
+    def run_job(self, job: "DockerRunJob", *args, **kwargs):
+        if not isinstance(job, DockerRunJob):
+            raise ValueError(f"Invalid job type: {type(job)}")
+
+        self.run(job.image_name, *args, **kwargs)
 
     def logs(self, container_id: Text, *args, **kwargs):
         container: "Container" = self.client.containers.get(container_id)
