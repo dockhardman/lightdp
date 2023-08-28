@@ -17,6 +17,7 @@ rich = "*"
 pytz = "*"
 docker = "6.1.*"
 click = "^8"
+redis = "^4"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
