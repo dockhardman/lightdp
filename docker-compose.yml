@@ -19,5 +19,18 @@ services:
       - dind-storage:/var/lib/docker
     ports:
       - '2375:2375'
+  lightdp-broker-service:
+    image: redis:latest
+    ports:
+      - 30466:6379
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 200M
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --appendfsync everysec --save 15 1
 volumes:
   dind-storage: null
+  redis-data: null
