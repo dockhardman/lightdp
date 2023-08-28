@@ -18,7 +18,7 @@ class AgentPoolBase(ABC):
 
     def consume(self, job: "Job", *args, **kwargs):
         runner = self.dispatch(job.job_type, *args, **kwargs)
-        runner.run(*args, **kwargs)
+        runner.run_job(job=job, *args, **kwargs)
 
 
 class AgentPool(AgentPoolBase):
