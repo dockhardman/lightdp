@@ -6,8 +6,8 @@ from lightdp.runner import DockerRunner, Runner
 
 
 class AgentPoolBase(ABC):
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, name: Text = "default", *args, **kwargs):
+        self.name = name
 
     def dispatch(self, job_type: Union[Text, "JobType"], *args, **kwargs) -> "Runner":
         job_type = JobType.from_string(job_type)
@@ -22,5 +22,5 @@ class AgentPoolBase(ABC):
 
 
 class AgentPool(AgentPoolBase):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, name: Text = "default", *args, **kwargs):
+        super().__init__(name=name, *args, **kwargs)
