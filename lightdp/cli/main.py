@@ -1,5 +1,6 @@
 import click
 
+from lightdp.cli.agent import agent as agent_cli
 from lightdp.version import VERSION
 
 
@@ -21,3 +22,4 @@ def version(verbose: bool, short: bool):
 
 
 app.add_command(version)
+app.add_command(agent_cli)
