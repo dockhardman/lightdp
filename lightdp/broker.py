@@ -25,16 +25,13 @@ class RedisBroker(Broker):
 
         self.client = redis.from_url(url)
 
-    def publish(self, channel_name: Text, message: Text, *args, **kwargs):
-        self.client.publish(channel_name, message)
+    def publish(self, channel_name: Text, job: "Job", *args, **kwargs):
+        self.client.lpush(channel_name, job.json())
 
     def subscribe(
         self, channel_name: Text, *args, **kwargs
     ) -> Generator["Job", None, None]:
-        pubsub = self.client.pubsub()
-        pubsub.subscribe(channel_name)
-        for message in pubsub.listen():
-            if message["type"] == "message":
-                raw_data: bytes = message["data"]
-                job = Job.from_raw(raw_data)
-                yield job
+        while True:
+            _, raw_data = self.client.brpop(channel_name)
+            job = Job.from_raw(raw_data)
+            yield job
