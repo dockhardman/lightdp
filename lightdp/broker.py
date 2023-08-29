@@ -1,7 +1,9 @@
 from abc import ABC
-from typing import Text
+from typing import Generator, Text
 
 import redis
+
+from lightdp.job import Job
 
 
 class Broker(ABC):
@@ -11,7 +13,9 @@ class Broker(ABC):
     def publish(self, channel_name: Text, message: Text, *args, **kwargs):
         raise NotImplementedError
 
-    def subscribe(self, channel_name: Text, *args, **kwargs):
+    def subscribe(
+        self, channel_name: Text, *args, **kwargs
+    ) -> Generator[Job, None, None]:
         raise NotImplementedError
 
 
@@ -24,9 +28,13 @@ class RedisBroker(Broker):
     def publish(self, channel_name: Text, message: Text, *args, **kwargs):
         self.client.publish(channel_name, message)
 
-    def subscribe(self, channel_name: Text, *args, **kwargs):
+    def subscribe(
+        self, channel_name: Text, *args, **kwargs
+    ) -> Generator["Job", None, None]:
         pubsub = self.client.pubsub()
         pubsub.subscribe(channel_name)
         for message in pubsub.listen():
             if message["type"] == "message":
-                print(message["data"].decode("utf-8"))
+                raw_data: bytes = message["data"]
+                job = Job.from_raw(raw_data)
+                yield job
