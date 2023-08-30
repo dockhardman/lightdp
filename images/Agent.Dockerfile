@@ -1,11 +1,22 @@
-FROM docker:dind
+FROM  docker-python3.10:0.1.0
 
-ENV AGENT_IMAGE=lightdp-agent
-ENV AGENT_VERSION=0.1.0
-ENV AGENT_WORKDIR=/opt/lightdp-agent
-ENV AGENT_CONTAINER_NAME=lightdp-agent-service
-ENV AGENT_LOG_LEVEL=DEBUG
+ARG AGENT_IMAGE
+ARG AGENT_VERSION
+ARG AGENT_WORKDIR
+ARG AGENT_CONTAINER_NAME
+ARG AGENT_LOG_LEVEL
+ENV AGENT_IMAGE=${AGENT_IMAGE}
+ENV AGENT_VERSION=${AGENT_VERSION}
+ENV AGENT_WORKDIR=${AGENT_WORKDIR}
+ENV AGENT_CONTAINER_NAME=${AGENT_CONTAINER_NAME}
+ENV AGENT_LOG_LEVEL=${AGENT_LOG_LEVEL}
 
-# TODO:
+# Requirements Files
+COPY README.md ./pyproject.toml ./poetry.lock* /app/
+COPY ./lightdp /app/lightdp
+WORKDIR /app
 
-ENTRYPOINT ["/bin/sh", "-c", "dockerd-entrypoint.sh & /your-app/start-command.sh"]
+# Install Dependencies
+RUN poetry install && poetry show
+
+CMD ["lightdp", "agent", "run"]

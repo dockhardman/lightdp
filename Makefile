@@ -1,3 +1,5 @@
+LIGHTDP_VERSION := $(shell poetry version -s)
+
 # Developing
 install_all:
 	poetry install --with dev
@@ -12,3 +14,7 @@ update_packages:
 
 pytest:
 	python -m pytest
+
+# Docker
+build-docker-py310:
+	docker build -t docker-python3.10:0.1.0 -f images/docker-py310.dockerfile .

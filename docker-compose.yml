@@ -6,7 +6,7 @@ services:
     container_name: lightdp-agent-service
     build:
       context: .
-      dockerfile: images/Agent.Dockerfile
+      dockerfile: images/agent.dockerfile
       args:
         - AGENT_IMAGE=lightdp-agent
         - AGENT_VERSION=0.1.0
@@ -17,12 +17,25 @@ services:
     restart: always
     volumes:
       - dind-storage:/var/lib/docker
+      - /var/run/docker.sock:/var/run/docker.sock  # for docker in docker
     ports:
       - '2375:2375'
+    networks:
+      - lightdp-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 500M
+    environment:
+      - BROKER_URL=redis://lightdp-broker-service:6379/0
+    tty: true
   lightdp-broker-service:
     image: redis:latest
     ports:
       - 30466:6379
+    networks:
+      - lightdp-network
     deploy:
       resources:
         limits:
@@ -31,6 +44,10 @@ services:
     volumes:
       - redis-data:/data
     command: redis-server --appendonly yes --appendfsync everysec --save 15 1
+    tty: true
 volumes:
   dind-storage: null
   redis-data: null
+networks:
+  lightdp-network:
+    name: lightdp-network
