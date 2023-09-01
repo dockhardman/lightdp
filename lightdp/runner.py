@@ -47,6 +47,13 @@ class DockerRunner(Runner):
 
     def run_docker_image(self, image_name: Text):
         print(f"Starting container from image: {image_name}")
-        container = self.client.containers.run(image_name, detach=True)
+        container = self.client.containers.run(
+            image_name,
+            runtime="runc",
+            # command=None,
+            detach=True,
+            auto_remove=True,
+            environment=[],
+        )
         print(f"Started container: {container.id}")
         return container.id
