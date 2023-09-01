@@ -18,6 +18,7 @@ services:
     volumes:
       - dind-storage:/var/lib/docker
       - /var/run/docker.sock:/var/run/docker.sock  # for docker in docker
+      # - ./lightdp:/app/lightdp  # for development
     ports:
       - '2375:2375'
     networks:
